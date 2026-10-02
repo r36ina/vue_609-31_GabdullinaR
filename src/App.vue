@@ -1,33 +1,9 @@
 <script>
-import ProductList from './components/ProductList.vue';
-import axios from 'axios';
+import VCatalog from './components/VCatalog.vue';
 
 export default {
-  components: {ProductList},
-  data() {
-    return {
-      items: [],
-    };
-  },
-  methods: {
-    async fetchItems() {
-      try {
-        const {data} = await axios.get("https://7a0532a2ccc1c45d.mokky.dev/items")
-        this.items = data.map((obj) => ({
-          ...obj,
-          isFavorite: false,
-          isAdded: false,
-        }));
-      } catch(e) {
-        console.log(e);
-      }
-    },
-  },
-  async mounted() {
-    await this.fetchItems();
-  },
-};
-
+  components: {VCatalog} 
+}
 </script>
 
 <template>
@@ -67,10 +43,7 @@ export default {
           </ul>
         </div>
       </nav>
-      <main class="pt-10">
-        <h1 class="text-[40px] font-bold mb-5">Каталог</h1>
-        <product-list :items="items"></product-list>
-      </main>
+      <v-catalog></v-catalog>
     </div>
     <footer class="p-6 bg-slate-100">
       <div class="text-center text-slate-500">
