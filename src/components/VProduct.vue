@@ -1,34 +1,49 @@
 <script>
+import { useFavoritesStore } from "@/stores/favorites";
+import { useCartStore } from "@/stores/cart";
+
 export default {
     props: {
-        imgUrl: String,
-        title: String,
-        price: String,
+        product: Object,
+    },
+    data() {
+        return {
+            favoritesStore: useFavoritesStore(),
+            cartStore: useCartStore(),
+        };
     },
 };
 </script>
-
 <template>
     <div class="p-5 bg-slate-100 rounded-xl flex flex-col justify-between gap-2">
         <div>
-            <img :src="imgUrl" alt="" class="mb-4">
-            <h3 class="text-xl font-semibold">{{ title }}</h3>
+            <img :src="product.imageUrl" alt="" class="mb-4">
+            <h3 class="text-xl font-semibold">{{ product.title }}</h3>
         </div>
         <div class="flex items-center justify-between gap-2">
             <div>
             <p class="text-slate-500">Цена</p>
-            <b class="text-xl">{{ price }} ₽</b>
+            <b class="text-xl">{{ product.price.toLocaleString("ru-RU") }} ₽</b>
             </div>
             <div class="flex items-center gap-3">
-            <button class="rounded-4xl bg-white shadow p-3 cursor-pointer hover:scale-110 transition">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21.65C11.69 21.65 11.39 21.61 11.14 21.52C7.32 20.21 1.25 15.56 1.25 8.69C1.25 5.19 4.08 2.35 7.56 2.35C9.25 2.35 10.83 3.01 12 4.19C13.17 3.01 14.75 2.35 16.44 2.35C19.92 2.35 22.75 5.2 22.75 8.69C22.75 15.57 16.68 20.21 12.86 21.52C12.61 21.61 12.31 21.65 12 21.65ZM7.56 3.85C4.91 3.85 2.75 6.02 2.75 8.69C2.75 15.52 9.32 19.32 11.63 20.11C11.81 20.17 12.2 20.17 12.38 20.11C14.68 19.32 21.26 15.53 21.26 8.69C21.26 6.02 19.1 3.85 16.45 3.85C14.93 3.85 13.52 4.56 12.61 5.79C12.33 6.17 11.69 6.17 11.41 5.79C10.48 4.55 9.08 3.85 7.56 3.85Z" fill="#263141"/>
+            <button class="rounded-4xl shadow p-3 cursor-pointer hover:scale-110 transition"
+                @click="favoritesStore.toggleFavorite(product)"
+                :class="[
+                    favoritesStore.isFavorite(product.id) ? 'bg-red-500' : 'bg-white',
+                ]">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.99999 18.0417C9.74166 18.0417 9.49166 18.0083 9.28332 17.9333C6.09999 16.8417 1.04166 12.9667 1.04166 7.24167C1.04166 4.325 3.39999 1.95834 6.29999 1.95834C7.70832 1.95834 9.02499 2.50834 9.99999 3.49167C10.975 2.50834 12.2917 1.95834 13.7 1.95834C16.6 1.95834 18.9583 4.33334 18.9583 7.24167C18.9583 12.975 13.9 16.8417 10.7167 17.9333C10.5083 18.0083 10.2583 18.0417 9.99999 18.0417ZM6.29999 3.20834C4.09166 3.20834 2.29166 5.01667 2.29166 7.24167C2.29166 12.9333 7.76666 16.1 9.69166 16.7583C9.84166 16.8083 10.1667 16.8083 10.3167 16.7583C12.2333 16.1 17.7167 12.9417 17.7167 7.24167C17.7167 5.01667 15.9167 3.20834 13.7083 3.20834C12.4417 3.20834 11.2667 3.8 10.5083 4.825C10.275 5.14167 9.74166 5.14167 9.50832 4.825C8.73332 3.79167 7.56666 3.20834 6.29999 3.20834Z" fill="#263141"
+                    :fill="favoritesStore.isFavorite(product.id) ? '#fff' : '#263141'"/>
                 </svg>
             </button>
-            <button class="rounded-4xl bg-white shadow p-3 cursor-pointer hover:scale-110 transition">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 7H18.79C19.0694 7.00001 19.3457 7.05857 19.6011 7.17191C19.8565 7.28524 20.0854 7.45083 20.2729 7.65801C20.4603 7.86519 20.6023 8.10936 20.6897 8.37478C20.777 8.64019 20.8078 8.92097 20.78 9.199L20.18 15.199C20.1307 15.6925 19.8997 16.1501 19.532 16.4829C19.1642 16.8157 18.686 17 18.19 17H8.64C8.17747 17.0002 7.72918 16.84 7.37144 16.5469C7.01371 16.2537 6.76866 15.8456 6.678 15.392L5 7Z" stroke="#263141" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M5 7L4.19 3.757C4.13583 3.54075 4.01095 3.34881 3.83521 3.21166C3.65946 3.0745 3.44293 3.00001 3.22 3H2M8 21H10M16 21H18" stroke="#263141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <button class="rounded-4xl shadow p-3 cursor-pointer hover:scale-110 transition"
+                @click="cartStore.isAdded(product.id) ? cartStore.removeFromCart(product.id) : cartStore.addToCart(product)"
+                :class="[cartStore.isAdded(product.id) ? 'bg-red-500' : 'bg-white']">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path v-show="cartStore.isAdded(product.id)" 
+                    d="M18 5.31667C15.225 5.04167 12.4333 4.9 9.65 4.9C8 4.9 6.35 4.98333 4.7 5.15L3 5.31667M7.58333 4.475L7.76667 3.38333C7.9 2.59167 8 2 9.40833 2H11.5917C13 2 13.1083 2.625 13.2333 3.39167L13.4167 4.475M16.2083 7.95L15.6667 16.3417C15.575 17.65 15.5 18.6667 13.175 18.6667H7.825C5.5 18.6667 5.425 17.65 5.33333 16.3417L4.79167 7.95M9.10833 14.0833H11.8833M8.41667 10.75H12.5833" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <path v-show="!cartStore.isAdded(product.id)"
+                    d="M4.16666 5.83333H15.6583C15.8912 5.83334 16.1214 5.88214 16.3343 5.97659C16.5471 6.07103 16.7378 6.20903 16.894 6.38168C17.0503 6.55433 17.1686 6.7578 17.2414 6.97898C17.3142 7.20016 17.3398 7.43414 17.3167 7.66583L16.8167 12.6658C16.7755 13.0771 16.5831 13.4584 16.2766 13.7357C15.9702 14.0131 15.5716 14.1667 15.1583 14.1667H7.19999C6.81455 14.1668 6.44097 14.0334 6.14286 13.789C5.84475 13.5447 5.64054 13.2046 5.56499 12.8267L4.16666 5.83333ZM4.16666 5.83333L3.49166 3.13083C3.44651 2.95063 3.34245 2.79067 3.196 2.67638C3.04954 2.56209 2.8691 2.5 2.68332 2.5H1.66666M6.66666 17.5H8.33332M13.3333 17.5H15" stroke="#263141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
             </div>

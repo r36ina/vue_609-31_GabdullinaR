@@ -1,14 +1,16 @@
 <script>
 import axios from 'axios';
-import VProduct from "./VProduct.vue";
-import SearchInput from "./SearchInput.vue";
-import SortSelect from "./SortSelect.vue";
+import VProduct from "../components/VProduct.vue";
+import SearchInput from "../components/SearchInput.vue";
+import SortSelect from "../components/SortSelect.vue";
+import ProductSkeletonLoader from '../components/ProductSkeletonLoader.vue';
 
 export default {
-    components: {VProduct, SearchInput, SortSelect},
+    components: {VProduct, SearchInput, SortSelect, ProductSkeletonLoader},
     data() {
         return {
             items: [],
+            showSkeletonLoader: true,
             searchQuery: "",
             sortBy: localStorage.getItem('shop_sort_by') || 'default',
             sortOptions: [
@@ -72,12 +74,13 @@ export default {
     },
     async mounted() {
         await this.fetchItems();
+        this.showSkeletonLoader = false;
     },
 };
 </script>
 
 <template>
-    <main>
+    <main class="pt-10">
         <div class="flex justify-between">
             <h1 class="text-[40px] font-bold mb-5">Каталог</h1>
             <div class="flex items-center gap-4">
@@ -86,14 +89,17 @@ export default {
             </div>
         </div>
         <div class="grid grid-cols-5 gap-5">
-            <v-product 
-                v-for="item in filteredProducts"
-                :key="item.id"
-                :img-url="item.imageUrl"
-                :title="item.title"
-                :price="item.price.toLocaleString('ru-RU')">
-            </v-product>
-            <p v-if="filteredProducts.length === 0">Товары не найдены</p>
+            <template v-if="showSkeletonLoader">
+                <product-skeleton-loader v-for="value in 10" :key="value"/>
+            </template>
+            <template v-else>
+                <v-product 
+                    v-for="item in filteredProducts"
+                    :key="item.id"
+                    :product="item">
+                </v-product>
+                <p v-if="filteredProducts.length === 0">Товары не найдены</p>
+            </template>
         </div>
     </main>
 </template>

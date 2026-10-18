@@ -1,9 +1,4 @@
 <script>
-import VCatalog from './components/VCatalog.vue';
-
-export default {
-  components: {VCatalog} 
-}
 </script>
 
 <template>
@@ -17,33 +12,33 @@ export default {
           </div>
           <ul class="flex gap-10">
             <li>
-              <a href="" class="flex gap-3 items-center">
+              <RouterLink :to="{name: 'cart'}" class="flex gap-3 items-center">
                 <span class="p-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
                   <img src="/cart-icon.svg" alt="">
                 </span>
                 Корзина
-              </a>
+              </RouterLink>
             </li>
             <li>
-              <a href="" class="flex gap-3 items-center">
+              <RouterLink :to="{name: 'favorites'}" class="flex gap-3 items-center">
                 <span class="p-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
                   <img src="/like-outline.svg" alt="">
                 </span>
                 Избранное
-              </a>
+              </RouterLink>
             </li>
             <li>
-              <a href="" class="flex gap-3 items-center">
+              <RouterLink :to="{name: 'orders'}" class="flex gap-3 items-center">
                 <span class="p-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
                   <img src="/orders-icon.svg" alt="">
                 </span>
                 Заказы
-              </a>
+              </RouterLink>
             </li>
           </ul>
         </div>
       </nav>
-      <v-catalog></v-catalog>
+      <RouterView></RouterView>
     </div>
     <footer class="p-6 bg-slate-100">
       <div class="text-center text-slate-500">
